@@ -55,11 +55,6 @@ def determinar_contagiados(grafo, p0 ,delta_dias):
 
 
 
-
-
-
-
-
 if __name__ == '__main__':
     CODIGO = 1500
     SEED = 1
@@ -69,4 +64,3 @@ if __name__ == '__main__':
     reuniones = f"reuniones_{CODIGO}.txt"
     grafo = crear_grafo(personas,reuniones)
     posibles = determinar_contagiados(grafo,p0,delta_dias)
-    parametros = simulation_parameters(CODIGO,SEED)
