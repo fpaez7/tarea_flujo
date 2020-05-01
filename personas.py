@@ -5,23 +5,71 @@ class Persona:
     def __init__(self,id,probabilidad_contagio,dias_recuperacion,dias_sintomas):
         self._id = id
         self._probabilidad_contagio = probabilidad_contagio
-        self._estado = "S" # S: sano; A asintomatico; E enfermo ; M muerto ; R recuperado
+        self.estado = "S" # S: sano; A asintomatico; E enfermo ; M muerto ; R recuperado
         self._dias_recuperacion = dias_recuperacion #cuenta regresiva a recuperacion
-        self._dias_sintomas = dias_sintomas #cuenta regresiva a presentar sintomas
+        self._dias_sintomas = min(dias_sintomas, dias_recuperacion) #cuenta regresiva a presentar sintomas
+    @property
+    def dias_recuperacion(self):
+        return self._dias_recuperacion
+    @dias_recuperacion.setter
+    def dias_recuperacion(self, a):
+        if(a <= 0):
+            self._dias_recuperacion = 0
+            self.estado = "R"
+        self._dias_recuperacion = a
+
+    @property
+    def dias_sintomas(self):
+        return self._dias_sintomas
+    @dias_sintomas.setter
+    def dias_sintomas(self, a):
+        if(a <= 0):
+            self._dias_sintomas = 0
+            self.estado = "E"
+        self._dias_sintomas = a
     def contacto(self):
         pass
+
+    def pasar_dia (self):
+        if self.estado in ["A","E"]:
+            if self.estado == "A":
+                self.dias_sintomas -= 1
+            self.dias_recuperacion -= 1
+
+
+
+
     def __repr__(self):
-        return self._estado+str(self._id)
+        return self.estado+str(self._id)
     def __str__(self):
         if self.estado == "S":
             return f"Soy {self._id}, estoy Sano, P contagio {self._probabilidad_contagio}"
         if self.estado == "A":
-            return f"Soy {self._id}, estoy Asintomatico,sintomas:{self._dias_sintomas}, recuperacion {self.dias_recuperacion}"
+            return f"Soy {self._id}, estoy Asintomatico,sintomas:{self._dias_sintomas}, recuperacion {self._dias_recuperacion}"
         if self.estado == "E":
-            return f"Soy {self._id}, estoy Enfermo, recuperacion {self.dias_recuperacion}"
-        if self.estado == "I":
-            return f"Soy {self._id}, estoy Inmune "
+            return f"Soy {self._id}, estoy Enfermo, recuperacion {self._dias_recuperacion}"
+        if self.estado == "R":
+            return f"Soy {self._id}, estoy Recuperado "
 
 
 if __name__ == '__main__':
-    Persona(1,3)
+
+    # todos debieran sanarce a los 3 dias
+    p1 = Persona(1,0.4,3,1) #pasiente presenta sintomas al dia
+    p2 = Persona(2,0.4,3,2) #pasiente presenta sintomas al los 3
+    p3 = Persona(3,0.4,3,3) #pasiente que siempre es asintomatico
+    p4 = Persona(4,0.4,3,4) #pasiente que siempre es asintomatico
+    p5 = Persona(5,0.4,0,0) #parte como inmune
+    # todos debieran sanarce a los 0 dias
+    personas = [p1,p2,p3,p4,p5]
+    for i in personas:
+        i.estado = "A"# para testear esto cambiar estado default a A todos se enferman el dia 0
+
+
+
+    delta_dias = 3
+    for i in range (0,delta_dias+1):
+        print( f"Dia {i}")
+        for persona in personas:
+            print(persona)
+            persona.pasar_dia()
