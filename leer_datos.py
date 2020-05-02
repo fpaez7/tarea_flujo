@@ -72,12 +72,14 @@ def simular_contagio( grafo, p0, delta_dias, s):
     # EL paciente P se enferma si o si
     data_personas[p0].contacto(0)
     print(data_personas[p0])
+    datos_infectados = []
 
     for t in range (0,delta_dias+1):
 
         if VERBOSO:
             print(f"Comienza DIA {t}")
             print("Inf:",len(infectados),"-Vect:",len(vectores),"-Rec:",len(recuperados))
+            datos_infectados.append([t,len(infectados)])
         for reunion in data_reuniones[t]:
             culpables = vectores.intersection(reunion) #son los que infectaron la reunion
             if culpables:
