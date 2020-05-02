@@ -1,7 +1,6 @@
-import random
+from simulation_parameters import simulation_parameters
 
 class Persona:
-
     def __init__(self,id,probabilidad_contagio,dias_recuperacion,dias_sintomas):
         self._id = id
         self._probabilidad_contagio = probabilidad_contagio
@@ -27,17 +26,15 @@ class Persona:
             self._dias_sintomas = 0
             self.estado = "E"
         self._dias_sintomas = a
-    def contacto(self):
-        pass
+    def contacto(self,dado):
+        if dado <= self._probabilidad_contagio:
+            self.estado = "A"""
 
     def pasar_dia (self):
         if self.estado in ["A","E"]:
             if self.estado == "A":
                 self.dias_sintomas -= 1
             self.dias_recuperacion -= 1
-
-
-
 
     def __repr__(self):
         return self.estado+str(self._id)
@@ -53,6 +50,7 @@ class Persona:
 
 
 if __name__ == '__main__':
+    SEED = 1
 
     # todos debieran sanarce a los 3 dias
     p1 = Persona(1,0.4,3,1) #pasiente presenta sintomas al dia
@@ -62,8 +60,11 @@ if __name__ == '__main__':
     p5 = Persona(5,0.4,0,0) #parte como inmune
     # todos debieran sanarce a los 0 dias
     personas = [p1,p2,p3,p4,p5]
-    for i in personas:
-        i.estado = "A"# para testear esto cambiar estado default a A todos se enferman el dia 0
+
+    contagios = simulation_parameters(5,SEED)[2]
+
+    for i in range (0, len(personas)):
+        personas[i].contacto(contagios[i])# para testear esto cambiar estado default a A todos se enferman el dia 0
 
 
 
