@@ -1,6 +1,6 @@
 from collections import defaultdict
 from personas import Persona
-from simulation_parameters import simulation_parameters
+from simulation_parameters import simulation_parameters, simulation_contagios
 import re # https://stackoverflow.com/questions/1249388/removing-all-non-numeric-characters-from-string-in-python
 
 VERBOSO = True
@@ -52,6 +52,14 @@ def determinar_contagiados(grafo, p0 ,delta_dias):
     if VERBOSO:
         print(F"POSIBLES al final del dia {t}",posibles)
     return posibles
+
+def simular_contagio( grafo, p0, delta_dias, s):
+    contagios = simular_contagio
+    data_reuniones = grafo[1]
+    data_personas = grafo[0]
+
+
+
 
 
 
