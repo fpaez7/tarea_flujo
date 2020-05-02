@@ -15,7 +15,7 @@ def simulation_parameters(total, s):
 
 def simulation_contagios(total, dias, s,):
     contagios = dict()
-    for t in range (0,dias):
+    for t in range (0,dias+1):
         contagios_dia = {i: random() for i in range(total)}
         contagios[t] = contagios_dia
     return contagios
