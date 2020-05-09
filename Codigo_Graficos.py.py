@@ -11,7 +11,7 @@ casos_recuperados_acumulados=0
 for dia in dias:                                                  #dias seria como la lista de los dias con lo que pasaba en cada uno
     len(cantidad_casos_actuales).append(numero__casos__actuales[dia-1])       #esto es para tener una lista con los casos actuales de cada dia
     casos_acumulados+= numero__casos__nuevos[dia-1]          #esto es para ir teniendo los casos acumulados cada dia
-    casos_recuperados_acumulados+= numero__recuperados__nuevos[dia-1]      #esto es para tener los recuperados 
+    casos_recuperados_acumulados+= numero__recuperados__nuevos[dia-1]      #esto es para tener los recuperados
     cantidad_casos_totales.append(casos_acumulados)
     cantidad_casos_recuperados.append(casos_recuperados_acumulados)
 
@@ -24,7 +24,7 @@ def graficar_infectados(cantidad_casos_totales, cantidad_casos_recuperados, cant
     plt.ylabel('Cantidad de infectados')
     plt.xlabel('Días')
     plt.title("Infectados en función del tiempo")
-    
+
     plt.legend(loc=0)
     plt.savefig("grafico.png")
     mostrar=plt.show()
