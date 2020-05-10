@@ -1,5 +1,3 @@
-from simulation_parameters import simulation_parameters
-
 class Persona:
     def __init__(self,id,probabilidad_contagio):
         self._id = id

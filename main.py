@@ -4,7 +4,7 @@ from simulation_parameters import simulation_parameters
 from Codigo_Graficos import graficar_infectados
 import os #https://stackoverflow.com/questions/7165749/open-file-in-a-relative-location-in-python
 import re # https://stackoverflow.com/questions/1249388/removing-all-non-numeric-characters-from-string-in-python
-import copy
+import copy # copy deep copy
 import time
 
 VERBOSO = False
@@ -163,7 +163,7 @@ if __name__ == '__main__':
     delta_dias = 20 # Cantidad de dias
 
 
-    
+
     personas = os.path.join(script_dir, f"Instancias/personas_{CODIGO}.txt")
     reuniones = os.path.join(script_dir, f"Instancias/reuniones_{CODIGO}.txt")
     grafo = crear_grafo(personas,reuniones)
