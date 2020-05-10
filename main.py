@@ -1,6 +1,6 @@
 from collections import defaultdict
 from personas import Persona
-from simulation_parameters import simulation_parameters, simulation_contagios
+from simulation_parameters import simulation_parameters
 from Codigo_Graficos import graficar_infectados
 import os #https://stackoverflow.com/questions/7165749/open-file-in-a-relative-location-in-python
 import re # https://stackoverflow.com/questions/1249388/removing-all-non-numeric-characters-from-string-in-python
@@ -21,9 +21,7 @@ def crear_grafo ( personas, reuniones):
         data_reuniones[dia].append(parcial)
     #dia es el dia mas alto
     "Se simulan los parametros necesarios para cada persona"
-    parametros = simulation_parameters(CODIGO,SEED,dia)
-    recuperaciones = parametros [0] ##cantidad de dia desde la infeccion que su estado cambia a Inmune
-    sintomas = parametros[1] #cantidad de dia desde la infeccion que su estado de Enfermos con Sintomas
+    #cantidad de dia desde la infeccion que su estado de Enfermos con Sintomas
     """ Crea un diccionario donde se almacenan las persoans"""
     data_personas = dict()
     with open (personas) as file:
@@ -32,8 +30,7 @@ def crear_grafo ( personas, reuniones):
     for i in inter:
         persona = i.split(":")
         id = int(persona[0])
-        data_personas[id]= Persona(id,float(persona[1]),recuperaciones[id],sintomas[id])
-
+        data_personas[id]= Persona(id,float(persona[1]))
     return (data_personas,data_reuniones)
 
 
@@ -63,28 +60,27 @@ def determinar_contagiados(grafo, p0 ,delta_dias):
 
 def simular_contagio( grafo, p0, delta_dias, s):
     #vectores = infectados actuales
-
-    data_reuniones = grafo[1]
     data_personas = grafo[0]
-    contagios = simulation_contagios(len(data_personas),delta_dias,SEED)
-
-
+    data_reuniones = grafo[1]
+    parametros = simulation_parameters(len(data_personas),delta_dias,SEED)
+    dias_recuperacion = parametros[0]
+    #print(dias_recuperacion)
+    dias_sintomas = parametros[1]
+    #print(sintomas)
+    contagios = parametros[2]
     vectores = set()
     vectores.add(p0)
     infectados = set()
     infectados.add(p0)
     recuperados = set()
 
-    # EL paciente P se enferma si o si
-    data_personas[p0].contacto(0)
-    print(data_personas[p0])
+    data_personas[p0].contacto(0,dias_recuperacion[p0] , dias_sintomas[p0])
     datos_infectados = []
     datos_recuperados = []
     datos_it = []
     dias = []
 
     for t in range (0,delta_dias+1):
-
         if VERBOSO:
             print(f"Comienza DIA {t}")
             print("Inf:",len(infectados),"-Vect:",len(vectores),"-Rec:",len(recuperados))
@@ -100,8 +96,9 @@ def simular_contagio( grafo, p0, delta_dias, s):
                     #print("Reunion Infectada:",reunion , "Culpables:",culpables)
                 for posible_contagiado in reunion - culpables:
                     #print(data_personas[posible_contagiado]._probabilidad_contagio,contagios[t][posible_contagiado])
-                    data_personas[posible_contagiado].contacto(contagios[t][posible_contagiado])
-
+                    id = posible_contagiado
+                    if id not in recuperados and id not in infectados:
+                        data_personas[id].contacto(contagios[t][id],dias_recuperacion[id] , dias_sintomas[id])
         infectados = set()
         vectores = set()
         recuperados = set()
@@ -121,10 +118,16 @@ def simular_contagio( grafo, p0, delta_dias, s):
                 pass
             else:
                 print(F"ERROR ESTADO ANOMALO")
+    if VERBOSO:
+        print(f"Fin del DIA {t}")
+        print("Inf:",len(infectados),"-Vect:",len(vectores),"-Rec:",len(recuperados))
     return infectados,recuperados,{"t":dias,
             "i":datos_infectados,
             "it":datos_it,
             "r":datos_recuperados}
+
+
+
 def probabilidad_contagio(grafo,p0,delta_dias):
     for i in range (0,2):
         SEED = 0
@@ -133,15 +136,16 @@ if __name__ == '__main__':
     script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
     rel_path = "2091/data.txt"
     abs_file_path = os.path.join(script_dir, rel_path)
-    CODIGO = 15000
+    CODIGO = 1500
     SEED = 4
     p0 = 33 #pacoente original
-    delta_dias = 3 # Cantidad de dias
+    delta_dias = 75 # Cantidad de dias
     personas = os.path.join(script_dir, f"Instancias/personas_{CODIGO}.txt")
     reuniones = os.path.join(script_dir, f"Instancias/reuniones_{CODIGO}.txt")
     grafo = crear_grafo(personas,reuniones)
-    resultados = simular_contagio( grafo, 33, 75, SEED)
-    print(graficar_infectados(resultados[2]))
+    #determinar_contagiados(grafo,p0,delta_dias)
+    resultados = simular_contagio( grafo, 33, delta_dias, SEED)
+    grafico = graficar_infectados(resultados[2])
 
 
 #    posibles = determinar_contagiados(grafo,p0,delta_dias)
