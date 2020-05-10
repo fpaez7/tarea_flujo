@@ -7,7 +7,7 @@ import re # https://stackoverflow.com/questions/1249388/removing-all-non-numeric
 import copy
 import time
 
-VERBOSO = True
+VERBOSO = False
 
 def crear_grafo ( personas, reuniones):
     """ Crea un default diccionario donde las llaves son los dias y los elemntos son una
@@ -22,7 +22,7 @@ def crear_grafo ( personas, reuniones):
         dia = int(re.sub("[^0-9]", "",inter[i].split("}")[1] ))
         data_reuniones[dia].append(parcial)
     #dia es el dia mas alto
-    "Se simulan los parametros necesarios para cada persona"
+
     #cantidad de dia desde la infeccion que su estado de Enfermos con Sintomas
     """ Crea un diccionario donde se almacenan las persoans"""
     data_personas = dict()
@@ -64,7 +64,8 @@ def simular_contagio( grafo, p0, delta_dias, s):
     #vectores = infectados actuales
     data_personas = grafo[0]
     data_reuniones = grafo[1]
-    parametros = simulation_parameters(len(data_personas),delta_dias,SEED)
+    "Se simulan los parametros necesarios para cada persona"
+    parametros = simulation_parameters(len(data_personas),delta_dias,s)
     dias_recuperacion = parametros[0]
     #print(dias_recuperacion)
     dias_sintomas = parametros[1]
@@ -132,39 +133,49 @@ def simular_contagio( grafo, p0, delta_dias, s):
 
 def probabilidad_contagio(grafo,p0,delta_dias):
     Cantidad = len(grafo[0].keys())
-    SIMULACIONES = 100
+    SIMULACIONES = 10
     conteos = {i: 0 for i in range(Cantidad)}
-    for SEED in range (0,SIMULACIONES):
+    tiempo_simulaciones = 0
+    for s in range (0,SIMULACIONES):
         copia_grafo = copy.deepcopy(grafo)
-        if VERBOSO:
-            print("-"*45,f"SIMUACION SEMILLA: {SEED}","-"*45)
-        infectados = simular_contagio(copia_grafo, p0, delta_dias,SEED)[0]
+        print("-"*45,f"SIMUACION SEMILLA: {s}","-"*45)
+        t_inicio=time.time()
+        infectados = simular_contagio(copia_grafo, p0, delta_dias,s)[0]
+        tiempo_simulacion = time.time()-t_inicio
+        tiempo_simulaciones += tiempo_simulacion
+        print(F"Tiempo de simulacion{tiempo_simulacion}")
         for i in range(Cantidad):
             if i in infectados:
                 conteos[i] += 1
     for i in range (0, Cantidad):
-        conteos[i]= conteos[i]/Cantidad
-        if conteos[i]:
+        conteos[i]= float(conteos[i])/float(SIMULACIONES)
+        if conteos[i] and VERBOSO:
             print(f"Pasinte{i}: probabilidad: {conteos[i]}")
+    print(f"Con {Cantidad} personas y {delta_dias} dias se demora {tiempo_simulaciones}s en hacer {SIMULACIONES} simulaciones\nPromedio de simulacion{tiempo_simulaciones/SIMULACIONES} s")
     return conteos
 
 if __name__ == '__main__':
     script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
     rel_path = "2091/data.txt"
     abs_file_path = os.path.join(script_dir, rel_path)
-    CODIGO = 1500
-    SEED = 4
+    CODIGO = 15000 #Cantidad de pacientes
     p0 = 33 #pacoente original
     delta_dias = 20 # Cantidad de dias
+
+
+    
     personas = os.path.join(script_dir, f"Instancias/personas_{CODIGO}.txt")
     reuniones = os.path.join(script_dir, f"Instancias/reuniones_{CODIGO}.txt")
     grafo = crear_grafo(personas,reuniones)
-    #determinar_contagiados(grafo,p0,delta_dias)
-    #t_inicio=time.time()
-    #resultados = simular_contagio( grafo, 33, delta_dias, SEED)
-    #print(F"Tiempo de simulacion {time.time()-t_inicio}")
-    conteos = probabilidad_contagio(grafo,p0,delta_dias)
-    #grafico = graficar_infectados(resultados[2])
+
+    """ #Para hacer una sola simulacion
+    SEED = 4
+    determinar_contagiados(grafo,p0,delta_dias)
+    resultados = simular_contagio( grafo, 33, delta_dias, SEED)
+    grafico = graficar_infectados(resultados[2])
+    """
+    probabilidades = probabilidad_contagio(grafo,p0,delta_dias)
+    #
 
 
 #    posibles = determinar_contagiados(grafo,p0,delta_dias)
