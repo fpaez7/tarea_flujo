@@ -4,6 +4,8 @@ from simulation_parameters import simulation_parameters
 from Codigo_Graficos import graficar_infectados
 import os #https://stackoverflow.com/questions/7165749/open-file-in-a-relative-location-in-python
 import re # https://stackoverflow.com/questions/1249388/removing-all-non-numeric-characters-from-string-in-python
+import copy
+import time
 
 VERBOSO = True
 
@@ -129,8 +131,22 @@ def simular_contagio( grafo, p0, delta_dias, s):
 
 
 def probabilidad_contagio(grafo,p0,delta_dias):
-    for i in range (0,2):
-        SEED = 0
+    Cantidad = len(grafo[0].keys())
+    SIMULACIONES = 100
+    conteos = {i: 0 for i in range(Cantidad)}
+    for SEED in range (0,SIMULACIONES):
+        copia_grafo = copy.deepcopy(grafo)
+        if VERBOSO:
+            print("-"*45,f"SIMUACION SEMILLA: {SEED}","-"*45)
+        infectados = simular_contagio(copia_grafo, p0, delta_dias,SEED)[0]
+        for i in range(Cantidad):
+            if i in infectados:
+                conteos[i] += 1
+    for i in range (0, Cantidad):
+        conteos[i]= conteos[i]/Cantidad
+        if conteos[i]:
+            print(f"Pasinte{i}: probabilidad: {conteos[i]}")
+    return conteos
 
 if __name__ == '__main__':
     script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
@@ -139,13 +155,16 @@ if __name__ == '__main__':
     CODIGO = 1500
     SEED = 4
     p0 = 33 #pacoente original
-    delta_dias = 75 # Cantidad de dias
+    delta_dias = 20 # Cantidad de dias
     personas = os.path.join(script_dir, f"Instancias/personas_{CODIGO}.txt")
     reuniones = os.path.join(script_dir, f"Instancias/reuniones_{CODIGO}.txt")
     grafo = crear_grafo(personas,reuniones)
     #determinar_contagiados(grafo,p0,delta_dias)
-    resultados = simular_contagio( grafo, 33, delta_dias, SEED)
-    grafico = graficar_infectados(resultados[2])
+    #t_inicio=time.time()
+    #resultados = simular_contagio( grafo, 33, delta_dias, SEED)
+    #print(F"Tiempo de simulacion {time.time()-t_inicio}")
+    conteos = probabilidad_contagio(grafo,p0,delta_dias)
+    #grafico = graficar_infectados(resultados[2])
 
 
 #    posibles = determinar_contagiados(grafo,p0,delta_dias)
