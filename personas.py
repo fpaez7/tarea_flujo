@@ -1,12 +1,12 @@
 from simulation_parameters import simulation_parameters
 
 class Persona:
-    def __init__(self,id,probabilidad_contagio,dias_recuperacion,dias_sintomas):
+    def __init__(self,id,probabilidad_contagio):
         self._id = id
         self._probabilidad_contagio = probabilidad_contagio
         self.estado = "S" # S: sano; A asintomatico; E enfermo ; M muerto ; R recuperado
-        self._dias_recuperacion = dias_recuperacion #cuenta regresiva a recuperacion
-        self._dias_sintomas = min(dias_sintomas, dias_recuperacion) #cuenta regresiva a presentar sintomas
+        self._dias_recuperacion = 0#cuenta regresiva a recuperacion
+        self._dias_sintomas = 0 #cuenta regresiva a presentar sintomas
     @property
     def dias_recuperacion(self):
         return self._dias_recuperacion
@@ -26,9 +26,11 @@ class Persona:
             self._dias_sintomas = 0
             self.estado = "E"
         self._dias_sintomas = a
-    def contacto(self,dado):
-        if dado <= self._probabilidad_contagio:
-            self.estado = "A"""
+    def contacto(self,dado,dias_recuperacion,dias_sintomas):
+        if self.estado == "S" and dado <= self._probabilidad_contagio:
+            self.estado = "A"
+            self._dias_recuperacion = dias_recuperacion
+            self._dias_sintomas = min(dias_sintomas, dias_recuperacion)
 
     def pasar_dia (self):
         if self.estado in ["A","E"]:
