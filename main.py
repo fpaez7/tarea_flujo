@@ -1,16 +1,20 @@
 from collections import defaultdict
 from personas import Persona
 from simulation_parameters import simulation_parameters, simulation_contagios
+from Codigo_Graficos import graficar_infectados
 import os #https://stackoverflow.com/questions/7165749/open-file-in-a-relative-location-in-python
 import re # https://stackoverflow.com/questions/1249388/removing-all-non-numeric-characters-from-string-in-python
 
 VERBOSO = True
 
-def crear_grafo ( personas, reuniones ):
+def crear_grafo ( personas, reuniones):
+    """ Crea un default diccionario donde las llaves son los dias y los elemntos son una
+    lista con los sets con los id de las personas que se juntaron """
     data_reuniones = defaultdict(list)
     with open (reuniones) as file:
         linea = file.__next__()
     inter = linea.split("({")
+
     for i in range(1,len(inter)):
         parcial = set(map(int,inter[i].split("}")[0].split(", ")))
         dia = int(re.sub("[^0-9]", "",inter[i].split("}")[1] ))
@@ -29,8 +33,7 @@ def crear_grafo ( personas, reuniones ):
         persona = i.split(":")
         id = int(persona[0])
         data_personas[id]= Persona(id,float(persona[1]),recuperaciones[id],sintomas[id])
-    """ Crea un diccionario donde las llaves son los dias y los elemntos son una
-    lista con los sets con los id de las personas que se juntaron """
+
     return (data_personas,data_reuniones)
 
 
@@ -64,6 +67,8 @@ def simular_contagio( grafo, p0, delta_dias, s):
     data_reuniones = grafo[1]
     data_personas = grafo[0]
     contagios = simulation_contagios(len(data_personas),delta_dias,SEED)
+
+
     vectores = set()
     vectores.add(p0)
     infectados = set()
@@ -74,13 +79,19 @@ def simular_contagio( grafo, p0, delta_dias, s):
     data_personas[p0].contacto(0)
     print(data_personas[p0])
     datos_infectados = []
+    datos_recuperados = []
+    datos_it = []
+    dias = []
 
     for t in range (0,delta_dias+1):
 
         if VERBOSO:
             print(f"Comienza DIA {t}")
             print("Inf:",len(infectados),"-Vect:",len(vectores),"-Rec:",len(recuperados))
-            datos_infectados.append([t,len(infectados)])
+            datos_infectados.append(len(infectados))
+            datos_recuperados.append(len(recuperados))
+            datos_it.append(len(recuperados)+len(infectados))
+            dias.append(t)
         for reunion in data_reuniones[t]:
             culpables = vectores.intersection(reunion) #son los que infectaron la reunion
             if culpables:
@@ -90,6 +101,8 @@ def simular_contagio( grafo, p0, delta_dias, s):
                 for posible_contagiado in reunion - culpables:
                     #print(data_personas[posible_contagiado]._probabilidad_contagio,contagios[t][posible_contagiado])
                     data_personas[posible_contagiado].contacto(contagios[t][posible_contagiado])
+
+        infectados = set()
         vectores = set()
         recuperados = set()
         for i in range(0,len(data_personas)):
@@ -108,6 +121,13 @@ def simular_contagio( grafo, p0, delta_dias, s):
                 pass
             else:
                 print(F"ERROR ESTADO ANOMALO")
+    return infectados,recuperados,{"t":dias,
+            "i":datos_infectados,
+            "it":datos_it,
+            "r":datos_recuperados}
+def probabilidad_contagio(grafo,p0,delta_dias):
+    for i in range (0,2):
+        SEED = 0
 
 if __name__ == '__main__':
     script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
@@ -120,6 +140,8 @@ if __name__ == '__main__':
     personas = os.path.join(script_dir, f"Instancias/personas_{CODIGO}.txt")
     reuniones = os.path.join(script_dir, f"Instancias/reuniones_{CODIGO}.txt")
     grafo = crear_grafo(personas,reuniones)
-    simular_contagio( grafo, 33, 75, SEED)
+    resultados = simular_contagio( grafo, 33, 75, SEED)
+    print(graficar_infectados(resultados[2]))
+
 
 #    posibles = determinar_contagiados(grafo,p0,delta_dias)
