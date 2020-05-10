@@ -163,7 +163,7 @@ if __name__ == '__main__':
     delta_dias = 20 # Cantidad de dias
 
 
-    
+
     personas = os.path.join(script_dir, f"Instancias/personas_{CODIGO}.txt")
     reuniones = os.path.join(script_dir, f"Instancias/reuniones_{CODIGO}.txt")
     grafo = crear_grafo(personas,reuniones)
