@@ -151,24 +151,23 @@ def probabilidad_contagio(grafo,p0,delta_dias):
         conteos[i]= float(conteos[i])/float(SIMULACIONES) #ya esta hecha la division
         if conteos[i] and VERBOSIDAD > 1:
             print(f"Pasinte{i}: probabilidad: {conteos[i]}") #pos simplicidad solo printea los que son distintos de 0
-    print(f"Con {Cantidad} personas y {delta_dias} dias se demora {tiempo_simulaciones}s en hacer {SIMULACIONES} simulaciones\nPromedio de simulacion{tiempo_simulaciones/SIMULACIONES} s")
+    if VERBOSIDAD:
+        print(f"Con {Cantidad} personas y {delta_dias} dias se demora {tiempo_simulaciones}s en hacer {SIMULACIONES} simulaciones\nPromedio de simulacion{tiempo_simulaciones/SIMULACIONES} s")
     return conteos
 
 
 if __name__ == '__main__':
     script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
-    CODIGO = 15000 #Cantidad de pacientes
+    CODIGO = 1500 #Cantidad de pacientes
     p0 = 33 #pacoente original
     delta_dias = 20 # Cantidad de dias
     personas = os.path.join(script_dir, f"Instancias/personas_{CODIGO}.txt")
     reuniones = os.path.join(script_dir, f"Instancias/reuniones_{CODIGO}.txt")
     grafo = crear_grafo(personas,reuniones)
-    determinar_contagiados(grafo,p0,delta_dias)
-    Para hacer una sola simulacion
+    posibles = determinar_contagiados(grafo,p0,delta_dias)
     SEED = 4
     resultados = simular_contagio( grafo, 33, delta_dias, SEED)
     grafico = graficar_infectados(resultados[2])
+    print("INTENTAR CERRRAR EL GRAFICO PARA PODER PASASR A LAS MULTIPLES SIMULACIONES")
+    time.sleep(0.5)
     probabilidades = probabilidad_contagio(grafo,p0,delta_dias)
-
-
-#    posibles = determinar_contagiados(grafo,p0,delta_dias)
