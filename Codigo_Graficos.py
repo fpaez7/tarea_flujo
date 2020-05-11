@@ -3,7 +3,6 @@ import numpy as np
 
 
 def graficar_infectados(diccionario):
-    print(diccionario)
     cantidad_casos_totales = diccionario["it"]
     cantidad_casos_recuperados = diccionario["r"]
     cantidad_casos_actuales = diccionario["i"]
