@@ -4,7 +4,7 @@ from simulation_parameters import simulation_parameters
 from Codigo_Graficos import graficar_infectados
 import os #https://stackoverflow.com/questions/7165749/open-file-in-a-relative-location-in-python
 import re # https://stackoverflow.com/questions/1249388/removing-all-non-numeric-characters-from-string-in-python
-import copy
+import copy # copy deep copy
 import time
 
 VERBOSO = False
@@ -156,21 +156,15 @@ def probabilidad_contagio(grafo,p0,delta_dias):
 
 if __name__ == '__main__':
     script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
-    rel_path = "2091/data.txt"
-    abs_file_path = os.path.join(script_dir, rel_path)
     CODIGO = 15000 #Cantidad de pacientes
     p0 = 33 #pacoente original
     delta_dias = 20 # Cantidad de dias
-
-
-
     personas = os.path.join(script_dir, f"Instancias/personas_{CODIGO}.txt")
     reuniones = os.path.join(script_dir, f"Instancias/reuniones_{CODIGO}.txt")
     grafo = crear_grafo(personas,reuniones)
-
+    determinar_contagiados(grafo,p0,delta_dias)
     """ #Para hacer una sola simulacion
     SEED = 4
-    determinar_contagiados(grafo,p0,delta_dias)
     resultados = simular_contagio( grafo, 33, delta_dias, SEED)
     grafico = graficar_infectados(resultados[2])
     """
