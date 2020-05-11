@@ -1,12 +1,12 @@
 class Persona:
     def __init__(self,id,probabilidad_contagio):
-        self._id = id
-        self._probabilidad_contagio = probabilidad_contagio
+        self._id = id #esto es por bonito nada más, para identificar a cada persona
+        self._probabilidad_contagio = probabilidad_contagio #probabilidad de contagio inicial de cada persona
         self.estado = "S" # S: sano; A asintomatico; E enfermo ; M muerto ; R recuperado
-        self._dias_recuperacion = 0#cuenta regresiva a recuperacion
+        self._dias_recuperacion = 0 #cuenta regresiva a recuperacion, se inicializan en 0 porque al principio no saben si tienen la enfermedad
         self._dias_sintomas = 0 #cuenta regresiva a presentar sintomas
     @property
-    def dias_recuperacion(self):
+    def dias_recuperacion(self):  # manejan los cambios de estado (todas las propertys @)
         return self._dias_recuperacion
     @dias_recuperacion.setter
     def dias_recuperacion(self, a):
@@ -14,29 +14,28 @@ class Persona:
             self._dias_recuperacion = 0
             self.estado = "R"
         self._dias_recuperacion = a
-
     @property
     def dias_sintomas(self):
         return self._dias_sintomas
     @dias_sintomas.setter
-    def dias_sintomas(self, a):
+    def dias_sintomas(self, a):    #dias hasta que empiezan a tener sintomas
         if(a <= 0):
             self._dias_sintomas = 0
-            self.estado = "E"
+            self.estado = "E"                    #usamos clases por facilidad de modificar y clasificar estados, agregar todo tipo de informacion
         self._dias_sintomas = a
-    def contacto(self,dado,dias_recuperacion,dias_sintomas):
+    def contacto(self,dado,dias_recuperacion,dias_sintomas):        #dado es para ver si se contagio o no, dado el numero del dado
         if self.estado == "S" and dado <= self._probabilidad_contagio:
             self.estado = "A"
             self._dias_recuperacion = dias_recuperacion
             self._dias_sintomas = min(dias_sintomas, dias_recuperacion)
 
     def pasar_dia (self):
-        if self.estado in ["A","E"]:
+        if self.estado in ["A","E"]:                 #solo afecta si estas asintomatico o enfermo, sino estas sano o muerto, no afecta
             if self.estado == "A":
                 self.dias_sintomas -= 1
             self.dias_recuperacion -= 1
 
-    def __repr__(self):
+    def __repr__(self):                     #los dos para que se vea bonito
         return self.estado+str(self._id)
     def __str__(self):
         if self.estado == "S":
@@ -47,7 +46,6 @@ class Persona:
             return f"Soy {self._id}, estoy Enfermo, recuperacion {self._dias_recuperacion}"
         if self.estado == "R":
             return f"Soy {self._id}, estoy Recuperado "
-
 
 if __name__ == '__main__':
     SEED = 1

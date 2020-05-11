@@ -12,3 +12,6 @@ def simulation_parameters(total, delta_t,s):
     contagios = {t: {i: random() for i in range(total)} for t in range(delta_t + 1)}
 
     return r_p, c_p, contagios
+### es ineficiente, porque nos da el numero de probabilidad de que se contagie en cada día aunque no se reunan (son numeros inuyiles)
+## que no es tan importante, pero lo tuvimos en cuenta para el orden
+##y nos generaria problemas

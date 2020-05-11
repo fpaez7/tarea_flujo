@@ -1,12 +1,13 @@
+#Codigo_Graficos.py
 import matplotlib.pyplot as plt
 import numpy as np
 
 
 def graficar_infectados(diccionario):
-    cantidad_casos_totales = diccionario["it"]
-    cantidad_casos_recuperados = diccionario["r"]
-    cantidad_casos_actuales = diccionario["i"]
-    x = diccionario["t"]
+    cantidad_casos_totales = diccionario["it"]   #it es infectados totales
+    cantidad_casos_recuperados = diccionario["r"] #recueprados
+    cantidad_casos_actuales = diccionario["i"] #infectados actuales
+    x = diccionario["t"]   # dia
     plt.plot(x, cantidad_casos_actuales,label= 'casos actuales')
     plt.plot(x, cantidad_casos_recuperados, label= 'casos recuperados')
     plt.plot(x, cantidad_casos_totales, label= 'casos totales')
@@ -15,7 +16,7 @@ def graficar_infectados(diccionario):
     plt.title("Infectados en función del tiempo")
 
     plt.legend(loc=0)
-    plt.savefig("grafico.png")
+    plt.savefig("grafico_infectados.png")
     mostrar=plt.show()
     return mostrar
 
