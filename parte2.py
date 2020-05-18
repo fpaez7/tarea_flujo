@@ -1,5 +1,7 @@
 import os
 import networkx as nx
+
+
 script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
 path_archivo_inventario = os.path.join(script_dir, "Instancias/costos_inventario30.txt")
 path_archivo_transporte = os.path.join(script_dir, "Instancias/costos_transporte30x50.txt")
@@ -100,5 +102,5 @@ def crear_grafo():
     return G
 
 G = crear_grafo()
-flowDict = nx.min_cost_flow(G)
-print(flowDict)
+#flowDict = nx.min_cost_flow(G)
+#print(flowDict)
