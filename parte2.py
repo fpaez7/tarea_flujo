@@ -62,9 +62,10 @@ dic_abastecimiento = json_a_dict3(linea_abastecimiento)
 dic_encuentro = json_a_dict3(linea_encuentro)
 
 lista_tiempo = dic_abastecimiento["'a0'"].keys()
+print(dic_inventario)
 
 def crear_grafo():
-    G = nx.Graph()
+    G = nx.DiGraph()
     oferta_total = 0
     demanda_total = 0
     #creamos todos los nodos de abastecimiento y retiro en el tiempo
@@ -102,5 +103,5 @@ def crear_grafo():
     return G
 
 G = crear_grafo()
-#flowDict = nx.min_cost_flow(G)
+flowDict = nx.min_cost_flow(G)
 #print(flowDict)
