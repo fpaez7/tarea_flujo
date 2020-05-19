@@ -6,13 +6,9 @@ import json
 def abrir (nombre):
     script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
     path_archivo = os.path.join(script_dir, nombre)
-    with open(path_archivo, 'r') as openfile:
-        json_object = json.load(openfile)
-    return json_object
-
-if __name__ == '__main__':
-    json_object = abrir ("Instancias/costos_inventario30.txt")
-
+    with open(path_archivo, 'r') as file:
+        return eval(file.__next__())
+    return y
 
 def crear_grafo(dic_abastecimientos,dic_encuentros,dic_transportes, dic_inventarios):
     G = nx.DiGraph()
@@ -57,6 +53,15 @@ def crear_grafo(dic_abastecimientos,dic_encuentros,dic_transportes, dic_inventar
                         weight = costo, capacity = cap)
             t_anterior = tiempo
     return G
+
+if __name__ != '__main__':
+    encuentros = abrir("Instancias/matriz_encuentro50x70.txt")
+    abastecimientos = abrir("Instancias/matriz_abastecimiento30x70.txt")
+    transporte = abrir ("Instancias/costos_transporte30x50.txt")
+    inventario = abrir ("Instancias/costos_inventario30.txt")
+    G = crear_grafo(abastecimientos,encuentros,transporte,inventario)
+    flowDict = nx.min_cost_flow(G)
+    resultad
 
 
 if __name__ == '__main__':
