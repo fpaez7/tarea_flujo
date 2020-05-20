@@ -1,0 +1,1 @@
+{"a0-t0": {"sobreoferta": 664, "e0-t0": 22, "e1-t0": 34, "a0-t1": 0}, "a0-t1": {"sobreoferta": 544, "e0-t1": 16, "e1-t1": 26}, "a1-t0": {"sobreoferta": 561, "e0-t0": 0, "e1-t0": 0, "a1-t1": 0}, "a1-t1": {"sobreoferta": 985, "e0-t1": 0, "e1-t1": 0}, "e0-t0": {}, "e0-t1": {}, "e1-t0": {}, "e1-t1": {}, "sobreoferta": {}}
