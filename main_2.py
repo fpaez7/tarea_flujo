@@ -74,13 +74,16 @@ def Graficar(grafo, dict_flujos = False , solo_nodos = False):
         ax = Axes3D(fig) #genera un eje
         colores = {'s':'red','a':'magenta','e':"cyan"  }
         dict_zeta = {'e':0 ,'a':1,'s':2}
+
+        #lista de cordenadas de abastecimientos
         x_a=[]
         y_a=[]
         z_a=[]
-
+        #lista de cordenadas de encuentros
         x_e=[]
         y_e=[]
         z_e=[]
+        ## calculamos las cordenadas de todos los nodos
         for i in grafo.nodes():
             coor = coordenadas(i)
             id = coor[0]
@@ -96,20 +99,28 @@ def Graficar(grafo, dict_flujos = False , solo_nodos = False):
                 y_a.append(tiempo)
                 z_a.append(dict_zeta[tipo])
             elif tipo == "s":
+                #sofreofera
                 x_s =[ id ]
                 y_s =[ tiempo]
                 z_s = [dict_zeta[tipo]]
+
+        ### graficamos todos los puntos segun sus colores
         ax.scatter3D(x_e, y_e, z_e,color= colores['e'])
         ax.scatter3D(x_a, y_a, z_a,color= colores['a'])
         ax.scatter3D(x_s, y_s, z_s,color= colores['s'])
 
+
+        #añador arcos
         if not dict_flujos:
+            #  Flujos va a ser igual a los arcos del grafo (para greficar TODOS LOS ARCOS)
             flujos = dict(grafo.adjacency())
         else:
+            # Flujos va a ser igual a los flujos entregados
             flujos = dict_flujos
         if not solo_nodos:
             for inicio in flujos:
                 for fin in flujos[inicio]:
+                    # itera sobre todos los arcos pertenecientes a Flujo y los v graficando
                     coor_in = coordenadas(inicio)
                     coor_fn = coordenadas(fin)
                     x = np.array((coor_in[0],coor_fn[0]))
@@ -120,10 +131,22 @@ def Graficar(grafo, dict_flujos = False , solo_nodos = False):
                     elif dict_flujos[inicio][fin]:
                         ax.plot(x,y,z, alpha=0.7 ,c= colores[coor_fn[2]])
         ax.view_init(30, 210) #Es el ángulo en el que se muestra el gráfico: si están desde un editor, podrán girarlo
-        ax.set_xlabel('Id')
+        ax.set_xlabel('Id') # cambio los nombres de los ejes
         ax.set_ylabel('Tiempo')
         ax.set_zlabel('Tipo de punto')
         return plt
+        
+if __name__ != '__main__':
+    encuentros = {'e0': {'t0': 22, 't1': 16}, 'e1': {'t0': 34, 't1': 26}}
+    abastecimientos = {'a0': {'t0': 720, 't1': 586}, 'a1': {'t0': 561, 't1': 985}}
+    transporte = {'a0': {'e0': (5, 32), 'e1': (6, 43)},'a1': {'e0': (7, 67), 'e1': (8, 36)}}
+    inventario = {'a0': (0, 427), 'a1': (0, 445)}
+    G = crear_grafo(abastecimientos,encuentros,transporte,inventario)
+    Graficar(G).show()
+    flowDict = nx.min_cost_flow(G)
+    with open('resultado_simple.txt', 'w') as outfile:
+        json.dump(flowDict, outfile)
+    Graficar(G,flowDict).show()
 
 
 if __name__ == '__main__':
@@ -131,21 +154,14 @@ if __name__ == '__main__':
     abastecimientos = abrir("Instancias/matriz_abastecimiento30x70.txt")
     transporte = abrir ("Instancias/costos_transporte30x50.txt")
     inventario = abrir ("Instancias/costos_inventario30.txt")
-
+    #crea un grafo con los datos de las intancias
     G = crear_grafo(abastecimientos,encuentros,transporte,inventario)
+
+    #lo grafica con solo los nodos
     Graficar(G,solo_nodos=True).show()
+
+    #PFCM
     flowDict = nx.min_cost_flow(G)
     with open('resultado.txt', 'w') as outfile:
+        # lo guarda en el archivo resultado
         json.dump(flowDict, outfile)
-
-
-if __name__ != '__main__':
-    encuentros = {'e0': {'t0': 22, 't1': 16}, 'e1': {'t0': 34, 't1': 26}}
-    abastecimientos = {'a0': {'t0': 720, 't1': 586}, 'a1': {'t0': 561, 't1': 985}}
-    transporte = {'a0': {'e0': (5, 32), 'e1': (6, 43)},'a1': {'e0': (7, 67), 'e1': (8, 36)}}
-    inventario = {'a0': (0, 427), 'a1': (0, 445)}
-    G = crear_grafo(abastecimientos,encuentros,transporte,inventario)
-    flowDict = nx.min_cost_flow(G)
-    with open('resultado_simple.txt', 'w') as outfile:
-        json.dump(flowDict, outfile)
-    Graficar(G,flowDict).show()
