@@ -68,12 +68,12 @@ def coordenadas(nodo):
         tiempo = 0
     return id,tiempo,tipo
 
-def Graficar(grafo, dict_flujos = False ):
+def Graficar(grafo, dict_flujos = False , solo_nodos = False):
     with plt.style.context("bmh"): #estilo del gráfico: por ejemplo probar 'dark_background'
         fig = plt.figure("Grafo", figsize=(100, 7)) #Genera una figura
         ax = Axes3D(fig) #genera un eje
         colores = {'s':'red','a':'magenta','e':"cyan"  }
-        dict_zeta = {'s':2,'a':1,'e':0 }
+        dict_zeta = {'e':0 ,'a':1,'s':2}
         x_a=[]
         y_a=[]
         z_a=[]
@@ -87,13 +87,14 @@ def Graficar(grafo, dict_flujos = False ):
             tiempo = coor[1]
             tipo = coor[2]
             if tipo == "e":
-                x_a.append(id)
-                y_a.append(tiempo)
-                z_a.append(dict_zeta[tipo])
-            elif tipo == "a":
                 x_e.append(id)
                 y_e.append(tiempo)
                 z_e.append(dict_zeta[tipo])
+
+            elif tipo == "a":
+                x_a.append(id)
+                y_a.append(tiempo)
+                z_a.append(dict_zeta[tipo])
             elif tipo == "s":
                 x_s =[ id ]
                 y_s =[ tiempo]
@@ -106,41 +107,39 @@ def Graficar(grafo, dict_flujos = False ):
             flujos = dict(grafo.adjacency())
         else:
             flujos = dict_flujos
-
-        for inicio in flujos:
-            for fin in flujos[inicio]:
-                print(coordenadas(inicio),coordenadas(fin))
-                coor_in = coordenadas(inicio)
-                coor_fn = coordenadas(fin)
-                x = np.array((coor_in[0],coor_fn[0]))
-                y = np.array((coor_in[1],coor_fn[1]))
-                z = np.array((dict_zeta[coor_in[2]],dict_zeta[coor_fn[2]]))
-                #ax.plot(x,y,z, alpha=0.7, marker= 8 ,c="g")
-
-
+        if not solo_nodos:
+            for inicio in flujos:
+                for fin in flujos[inicio]:
+                    coor_in = coordenadas(inicio)
+                    coor_fn = coordenadas(fin)
+                    x = np.array((coor_in[0],coor_fn[0]))
+                    y = np.array((coor_in[1],coor_fn[1]))
+                    z = np.array((dict_zeta[coor_in[2]],dict_zeta[coor_fn[2]]))
+                    if not dict_flujos:
+                        ax.plot(x,y,z, alpha=0.7 ,c= colores[coor_fn[2]])
+                    elif dict_flujos[inicio][fin]:
+                        ax.plot(x,y,z, alpha=0.7 ,c= colores[coor_fn[2]])
         ax.view_init(30, 210) #Es el ángulo en el que se muestra el gráfico: si están desde un editor, podrán girarlo
         ax.set_xlabel('Id')
         ax.set_ylabel('Tiempo')
-        ax.yaxis.set_major_locator(ticker.MultipleLocator(10))
         ax.set_zlabel('Tipo de punto')
         return plt
 
 
-
-if __name__ != '__main__':
+if __name__ == '__main__':
     encuentros = abrir("Instancias/matriz_encuentro50x70.txt")
     abastecimientos = abrir("Instancias/matriz_abastecimiento30x70.txt")
     transporte = abrir ("Instancias/costos_transporte30x50.txt")
     inventario = abrir ("Instancias/costos_inventario30.txt")
 
     G = crear_grafo(abastecimientos,encuentros,transporte,inventario)
-    Graficar(G)
-    #flowDict = nx.min_cost_flow(G)
-    #with open('resultado.txt', 'w') as outfile:
-    #    json.dump(flowDict, outfile)
+    Graficar(G,solo_nodos=True).show()
+    flowDict = nx.min_cost_flow(G)
+    with open('resultado.txt', 'w') as outfile:
+        json.dump(flowDict, outfile)
 
 
-if __name__ == '__main__':
+if __name__ != '__main__':
     encuentros = {'e0': {'t0': 22, 't1': 16}, 'e1': {'t0': 34, 't1': 26}}
     abastecimientos = {'a0': {'t0': 720, 't1': 586}, 'a1': {'t0': 561, 't1': 985}}
     transporte = {'a0': {'e0': (5, 32), 'e1': (6, 43)},'a1': {'e0': (7, 67), 'e1': (8, 36)}}
