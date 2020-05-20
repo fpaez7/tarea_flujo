@@ -68,6 +68,8 @@ def coordenadas(nodo):
         tiempo = 0
     return id,tiempo,tipo
 
+
+
 def Graficar(grafo, dict_flujos = False , solo_nodos = False):
     with plt.style.context("bmh"): #estilo del gráfico: por ejemplo probar 'dark_background'
         fig = plt.figure("Grafo", figsize=(100, 7)) #Genera una figura
@@ -135,33 +137,43 @@ def Graficar(grafo, dict_flujos = False , solo_nodos = False):
         ax.set_ylabel('Tiempo')
         ax.set_zlabel('Tipo de punto')
         return plt
-        
-if __name__ != '__main__':
+
+def grafico_pfmc():
+    #le cambie los valores para que tuviera solucion
     encuentros = {'e0': {'t0': 22, 't1': 16}, 'e1': {'t0': 34, 't1': 26}}
     abastecimientos = {'a0': {'t0': 720, 't1': 586}, 'a1': {'t0': 561, 't1': 985}}
     transporte = {'a0': {'e0': (5, 32), 'e1': (6, 43)},'a1': {'e0': (7, 67), 'e1': (8, 36)}}
     inventario = {'a0': (0, 427), 'a1': (0, 445)}
     G = crear_grafo(abastecimientos,encuentros,transporte,inventario)
     Graficar(G).show()
+    """ Bonus: Esto resuleve el PFMC del ejemplo chico y lo grafica, podria mostrar las
+    cantidades de flujo en el grafico pero no nos dan puntaje por eso
     flowDict = nx.min_cost_flow(G)
     with open('resultado_simple.txt', 'w') as outfile:
         json.dump(flowDict, outfile)
-    Graficar(G,flowDict).show()
+    Graficar(G,flowDict).show()"""
 
 
-if __name__ == '__main__':
-    encuentros = abrir("Instancias/matriz_encuentro50x70.txt")
-    abastecimientos = abrir("Instancias/matriz_abastecimiento30x70.txt")
-    transporte = abrir ("Instancias/costos_transporte30x50.txt")
-    inventario = abrir ("Instancias/costos_inventario30.txt")
+def resolver_pfmc(abastecimiento, encuentro, transporte, inventario) :
+    abastecimientos = abrir(f"Instancias/{abastecimiento}")
+    encuentros = abrir(f"Instancias/{encuentro}")
+    transporte = abrir (f"Instancias/{transporte}")
+    inventario = abrir (f"Instancias/{inventario}")
     #crea un grafo con los datos de las intancias
     G = crear_grafo(abastecimientos,encuentros,transporte,inventario)
-
-    #lo grafica con solo los nodos
-    Graficar(G,solo_nodos=True).show()
-
-    #PFCM
     flowDict = nx.min_cost_flow(G)
+    """BONUS: grafica con solo los nodos
+    Graficar(G,solo_nodos=True).show()"""
+
+    #guarda el resultado en el archivo resultado.txt aca falta ponerlo en excel
     with open('resultado.txt', 'w') as outfile:
-        # lo guarda en el archivo resultado
         json.dump(flowDict, outfile)
+    return flowDict
+
+if __name__ != '__main__':
+    resolver_pfmc("matriz_abastecimiento30x70.txt",
+                    "matriz_encuentro50x70.txt",
+                    "costos_transporte30x50.txt",
+                    "costos_inventario30.txt")
+if __name__ == '__main__':
+    grafico_pfmc()
