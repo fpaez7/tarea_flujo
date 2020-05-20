@@ -145,13 +145,20 @@ def grafico_pfmc():
     transporte = {'a0': {'e0': (5, 32), 'e1': (6, 43)},'a1': {'e0': (7, 67), 'e1': (8, 36)}}
     inventario = {'a0': (0, 427), 'a1': (0, 445)}
     G = crear_grafo(abastecimientos,encuentros,transporte,inventario)
-    Graficar(G).show()
+    grafico = Graficar(G)
+    grafico.title("Representacion Simple")
+    grafico.savefig("representacion_simple.png")
+    grafico.show()
+
     """ Bonus: Esto resuleve el PFMC del ejemplo chico y lo grafica, podria mostrar las
-    cantidades de flujo en el grafico pero no nos dan puntaje por eso
+    cantidades de flujo en el grafico pero no nos dan puntaje por eso"""
     flowDict = nx.min_cost_flow(G)
     with open('resultado_simple.txt', 'w') as outfile:
         json.dump(flowDict, outfile)
-    Graficar(G,flowDict).show()"""
+    grafico = Graficar(G,flowDict)
+    grafico.title("Solucion Simple")
+    grafico.savefig("solucion_simple.png")
+    grafico.show()
 
 
 def resolver_pfmc(abastecimiento, encuentro, transporte, inventario) :
@@ -162,18 +169,21 @@ def resolver_pfmc(abastecimiento, encuentro, transporte, inventario) :
     #crea un grafo con los datos de las intancias
     G = crear_grafo(abastecimientos,encuentros,transporte,inventario)
     flowDict = nx.min_cost_flow(G)
-    """BONUS: grafica con solo los nodos
-    Graficar(G,solo_nodos=True).show()"""
+    """BONUS: grafica con solo los nodos"""
+    grafico = Graficar(G,solo_nodos=True)
+    grafico.title("Representacion Completa Solo Nodos")
+    grafico.savefig("representacion_completa_solo_nodos.png")
+    grafico.show()
 
     #guarda el resultado en el archivo resultado.txt aca falta ponerlo en excel
     with open('resultado.txt', 'w') as outfile:
         json.dump(flowDict, outfile)
     return flowDict
 
-if __name__ != '__main__':
+if __name__ == '__main__':
     resolver_pfmc("matriz_abastecimiento30x70.txt",
                     "matriz_encuentro50x70.txt",
                     "costos_transporte30x50.txt",
                     "costos_inventario30.txt")
-if __name__ == '__main__':
+if __name__ != '__main__':
     grafico_pfmc()
