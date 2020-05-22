@@ -6,6 +6,9 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.ticker as ticker
 import re #https://stackoverflow.com/questions/1249388/removing-all-non-numeric-characters-from-string-in-python
+import xlsxwriter #https://xlsxwriter.readthedocs.io/tutorial01.html
+from collections import defaultdict          #para ordenarse en los momentos de reunion
+
 
 def abrir (nombre):
     script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
@@ -137,6 +140,28 @@ def Graficar(grafo, dict_flujos = False , solo_nodos = False):
         ax.set_ylabel('Tiempo')
         ax.set_zlabel('Tipo de punto')
         return plt
+def flow_to_xlsx(flow,outfile):
+    dias = defaultdict(list)
+
+    for inicio in flow:
+        for final in flow[inicio]:
+            coor_in = coordenadas(inicio)
+            coor_fn =  coordenadas(final)
+            if flow[inicio][final]:
+                dias[coor_in[1]].append([inicio,final,flow[inicio][final]])
+
+
+    workbook = xlsxwriter.Workbook(outfile)
+    for dia in dias:
+        worksheet = workbook.add_worksheet(f"t{dia}")
+
+
+        for row in range(0,len(dias[dia])):
+            arco = dias[dia][row]
+            for col in range(0,len(arco)):
+                worksheet.write(row, col ,arco[col])
+    workbook.close()
+
 
 def grafico_pfmc():
     #le cambie los valores para que tuviera solucion
@@ -145,13 +170,21 @@ def grafico_pfmc():
     transporte = {'a0': {'e0': (5, 32), 'e1': (6, 43)},'a1': {'e0': (7, 67), 'e1': (8, 36)}}
     inventario = {'a0': (0, 427), 'a1': (0, 445)}
     G = crear_grafo(abastecimientos,encuentros,transporte,inventario)
-    Graficar(G).show()
+    grafico = Graficar(G)
+    grafico.title("Representacion Simple")
+    grafico.savefig("representacion_simple.png")
+    #grafico.show()
+
     """ Bonus: Esto resuleve el PFMC del ejemplo chico y lo grafica, podria mostrar las
-    cantidades de flujo en el grafico pero no nos dan puntaje por eso
+    cantidades de flujo en el grafico pero no nos dan puntaje por eso"""
     flowDict = nx.min_cost_flow(G)
-    with open('resultado_simple.txt', 'w') as outfile:
+    flow_to_xlsx(flowDict,"Resultado Simple.xlsx") #lo paso a excel
+    with open('resultado_simple.txt', 'w') as outfile: # y a txt pot si acaso
         json.dump(flowDict, outfile)
-    Graficar(G,flowDict).show()"""
+    grafico = Graficar(G,flowDict)
+    grafico.title("Solucion Simple")
+    grafico.savefig("solucion_simple.png")
+    #grafico.show()
 
 
 def resolver_pfmc(abastecimiento, encuentro, transporte, inventario) :
@@ -162,18 +195,21 @@ def resolver_pfmc(abastecimiento, encuentro, transporte, inventario) :
     #crea un grafo con los datos de las intancias
     G = crear_grafo(abastecimientos,encuentros,transporte,inventario)
     flowDict = nx.min_cost_flow(G)
-    """BONUS: grafica con solo los nodos
-    Graficar(G,solo_nodos=True).show()"""
-
-    #guarda el resultado en el archivo resultado.txt aca falta ponerlo en excel
+    """BONUS: grafica con solo los nodos"""
+    grafico = Graficar(G,solo_nodos=True)
+    grafico.title("Representacion Completa Solo Nodos")
+    grafico.savefig("representacion_completa_solo_nodos.png")
+    grafico.show()
+    flow_to_xlsx(flowDict,"Resultado.xlsx")
+    #guarda el resultado en el archivo resultado.txt
     with open('resultado.txt', 'w') as outfile:
         json.dump(flowDict, outfile)
     return flowDict
 
-if __name__ != '__main__':
+if __name__ == '__main__':
     resolver_pfmc("matriz_abastecimiento30x70.txt",
                     "matriz_encuentro50x70.txt",
                     "costos_transporte30x50.txt",
                     "costos_inventario30.txt")
-if __name__ == '__main__':
+if __name__ != '__main__':
     grafico_pfmc()
