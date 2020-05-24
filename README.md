@@ -37,8 +37,16 @@
 ### Tiempos de ejecución
 
 ### Parte 1
-en el
 
+* Determinar los contagiados:
+- Para "personas_1500.txt" y "reuniones_1500.txt": 0.059067487716674805 segundos
+
+* Graficos de contagios:
+- Para "personas_1500.txt" y "reuniones_1500.txt": 0.9925026893615723 segundos
+- Para "personas_15000.txt" y "reuniones_15000.txt": 5.249168395996094 segundos
+
+* Simulación del contagio:
+- Para "personas_1500.txt" y "reuniones_1500.txt" tomando al paciente 33 como el primer infectado y en un lapso de 22 días: 158.6204059123993 segundos 
 ### Parte 2
 
 Parte II:  | 3.992 |
