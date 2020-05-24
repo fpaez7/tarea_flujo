@@ -165,9 +165,18 @@ if __name__ == '__main__':
     reuniones = os.path.join(script_dir, f"Instancias/reuniones_{CODIGO}.txt")
     grafo = crear_grafo(personas,reuniones)
     posibles = determinar_contagiados(grafo,p0,delta_dias)
-    SEED = 4
+
+if __name__ == '__main__':
+    VERBOSIDAD = 1
+    script_dir = os.path.dirname("Informe.ipynb") #<-- absolute dir the script is in
+    CODIGO = 1500 #Cantidad de pacientes
+    personas = os.path.join(script_dir, f"Instancias/personas_{CODIGO}.txt")     #aca se crea el grafo (incluyendo las siguientes 3 lineas)
+    reuniones = os.path.join(script_dir, f"Instancias/reuniones_{CODIGO}.txt")
+    grafo = crear_grafo(personas,reuniones)
+    p0 = 33 #paciente original
+    delta_dias = 75 # Cantidad de dias
+    SEED = 6
     resultados = simular_contagio( grafo, 33, delta_dias, SEED)
-    grafico = graficar_infectados(resultados[2])
-    print("INTENTAR CERRRAR EL GRAFICO PARA PODER PASASR A LAS MULTIPLES SIMULACIONES")
-    time.sleep(0.5)
-    probabilidades = probabilidad_contagio(grafo,p0,delta_dias)
+    graficar_infectados(resultados[2])
+
+if __name__ == '__main__':
