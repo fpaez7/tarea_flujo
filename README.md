@@ -39,14 +39,18 @@
 ### Parte 1
 
 * Determinar los contagiados:
-- Para "personas_1500.txt" y "reuniones_1500.txt": 0.059067487716674805 segundos
+- Para "personas_1500.txt" y "reuniones_1500.txt":
+_0.059067487716674805 segundos_
 
 * Graficos de contagios:
-- Para "personas_1500.txt" y "reuniones_1500.txt": 0.9925026893615723 segundos
-- Para "personas_15000.txt" y "reuniones_15000.txt": 5.249168395996094 segundos
+- Para "personas_1500.txt" y "reuniones_1500.txt": 
+_0.9925026893615723 segundos_
+- Para "personas_15000.txt" y "reuniones_15000.txt":
+_5.249168395996094 segundos_
 
 * Simulación del contagio:
-- Para "personas_1500.txt" y "reuniones_1500.txt" tomando al paciente 33 como el primer infectado y en un lapso de 22 días: 158.6204059123993 segundos 
+- Para "personas_1500.txt" y "reuniones_1500.txt" tomando al paciente 33 como el primer infectado y en un lapso de 22 días:
+_158.6204059123993 segundos_
 ### Parte 2
 
 Parte II:  | 3.992 |
