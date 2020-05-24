@@ -13,7 +13,7 @@
 ## Consideraciones y supuestos
 
 ## Librerías
-* collections 
+* collections
 * os
 * re
 * copy
@@ -28,17 +28,18 @@
 
 ## Módulos.
 * El programa contiene 3 archivos `.py` sus funciones son las siguientes:
-- Codigo_Graficos.py: 
-- personas.py: 
-- simulation_parameters.py: 
+- Codigo_Graficos.py: crea los graficos para la parte 1
+- personas.py: modela la clase persona
+- simulation_parameters.py: entregado por el ayudante
 
-## Comentarios
+
 
 ### Tiempos de ejecución
 
 ### Parte 1
+en el
 
 ### Parte 2
 
-Parte II:  | 3.992 | 
-Parte III :  | 44.709 | 
+Parte II:  | 3.992 |
+Parte III :  | 44.709 |
