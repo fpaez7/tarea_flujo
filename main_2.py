@@ -8,7 +8,7 @@ import matplotlib.ticker as ticker
 import re #https://stackoverflow.com/questions/1249388/removing-all-non-numeric-characters-from-string-in-python
 import xlsxwriter #https://xlsxwriter.readthedocs.io/tutorial01.html
 from collections import defaultdict          #para ordenarse en los momentos de reunion
-import time 
+import time
 
 def abrir (nombre):
     script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
@@ -205,7 +205,7 @@ def resolver_pfmc(abastecimiento, encuentro, transporte, inventario) :
     with open('resultado.txt', 'w') as outfile:
         json.dump(flowDict, outfile)
     return flowDict
-if __name__ != '__main__':
+if __name__ == '__main__':
     print("2.2")
     tiempo_1 = time.time()
     grafico_pfmc()
