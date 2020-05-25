@@ -157,17 +157,23 @@ def probabilidad_contagio(grafo,p0,delta_dias):
 
 
 if __name__ == '__main__':
-    script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
+    print("1.1")
+    VERBOSIDAD = 1
+    tiempo_1= time.time()
+    script_dir = os.path.dirname("Informe.ipynb") #<-- absolute dir the script is in
     CODIGO = 1500 #Cantidad de pacientes
-    p0 = 33 #pacoente original
-    delta_dias = 20 # Cantidad de dias
-    personas = os.path.join(script_dir, f"Instancias/personas_{CODIGO}.txt")
+    personas = os.path.join(script_dir, f"Instancias/personas_{CODIGO}.txt")     #aca se crea el grafo (incluyendo las siguientes 3 lineas)
     reuniones = os.path.join(script_dir, f"Instancias/reuniones_{CODIGO}.txt")
     grafo = crear_grafo(personas,reuniones)
-    posibles = determinar_contagiados(grafo,p0,delta_dias)
-
+    p0 = 33 #paciente original
+    delta_dias = 7 # Cantidad de dias
+    contagiados = determinar_contagiados(grafo,p0,delta_dias)
+    print("Tiempo de ejecución:", time.time() - tiempo_1 )
+    print(contagiados)
 if __name__ == '__main__':
+    print("1.2.1")
     VERBOSIDAD = 1
+    tiempo_1=time.time()
     script_dir = os.path.dirname("Informe.ipynb") #<-- absolute dir the script is in
     CODIGO = 1500 #Cantidad de pacientes
     personas = os.path.join(script_dir, f"Instancias/personas_{CODIGO}.txt")     #aca se crea el grafo (incluyendo las siguientes 3 lineas)
@@ -178,5 +184,38 @@ if __name__ == '__main__':
     SEED = 6
     resultados = simular_contagio( grafo, 33, delta_dias, SEED)
     graficar_infectados(resultados[2])
+    tiempo_2=time.time()
+    tiempo_correr = tiempo_2 - tiempo_1
+    print("Tiempo de ejecución:", tiempo_correr)
 
 if __name__ == '__main__':
+    print("1.2.2")
+    VERBOSIDAD = 1
+    tiempo_1=time.time()
+    script_dir = os.path.dirname("Informe.ipynb") #<-- absolute dir the script is in
+    CODIGO = 15000 #Cantidad de pacientes
+    personas = os.path.join(script_dir, f"Instancias/personas_{CODIGO}.txt")     #aca se crea el grafo (incluyendo las siguientes 3 lineas)
+    reuniones = os.path.join(script_dir, f"Instancias/reuniones_{CODIGO}.txt")
+    grafo = crear_grafo(personas,reuniones)
+    p0 = 33 #paciente original
+    delta_dias = 68 # Cantidad de dias
+    SEED = 1113
+    resultados = simular_contagio( grafo, 33, delta_dias, SEED)
+    graficar_infectados(resultados[2])
+    tiempo_2=time.time()
+    tiempo_correr = tiempo_2 - tiempo_1
+    print("Tiempo de ejecución:", tiempo_correr)
+
+if __name__ != '__main__': # esta comentado porque demora mucho tiempo
+    print("1.3")
+    #acá se debería correr la función
+    script_dir = os.path.dirname("Informe.ipynb") #<-- absolute dir the script is in
+    CODIGO = 1500 #Cantidad de pacientes
+    personas = os.path.join(script_dir, f"Instancias/personas_{CODIGO}.txt")     #aca se crea el grafo (incluyendo las siguientes 3 lineas)
+    reuniones = os.path.join(script_dir, f"Instancias/reuniones_{CODIGO}.txt")
+    grafo = crear_grafo(personas,reuniones)
+    p0 = 33 #paciente original
+    delta_dias = 75 # Cantidad de dias
+    p0 = 33 #paciente original
+    delta_dias = 22 # Cantidad de dias
+    probabilidades = probabilidad_contagio(grafo,p0,delta_dias)
