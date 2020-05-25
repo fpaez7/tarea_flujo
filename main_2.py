@@ -173,7 +173,7 @@ def grafico_pfmc():
     grafico = Graficar(G)
     grafico.title("Representacion Simple")
     grafico.savefig("representacion_simple.png")
-    #grafico.show()
+    grafico.show()
 
     """ Bonus: Esto resuleve el PFMC del ejemplo chico y lo grafica, podria mostrar las
     cantidades de flujo en el grafico pero no nos dan puntaje por eso"""
@@ -184,7 +184,7 @@ def grafico_pfmc():
     grafico = Graficar(G,flowDict)
     grafico.title("Solucion Simple")
     grafico.savefig("solucion_simple.png")
-    #grafico.show()
+    grafico.show()
 
 
 def resolver_pfmc(abastecimiento, encuentro, transporte, inventario) :
@@ -209,6 +209,7 @@ if __name__ == '__main__':
     print("2.2")
     tiempo_1 = time.time()
     grafico_pfmc()
+    tiempo_2 = time.time()
     print("Tiempo de ejecución:", tiempo_2 - tiempo_1)
 
 if __name__ == '__main__':
