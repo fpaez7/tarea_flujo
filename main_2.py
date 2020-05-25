@@ -209,6 +209,7 @@ if __name__ == '__main__':
     print("2.2")
     tiempo_1 = time.time()
     grafico_pfmc()
+    tiempo_2 = time.time()
     print("Tiempo de ejecución:", tiempo_2 - tiempo_1)
 
 if __name__ == '__main__':
