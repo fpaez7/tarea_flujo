@@ -206,7 +206,7 @@ if __name__ == '__main__':
     tiempo_correr = tiempo_2 - tiempo_1
     print("Tiempo de ejecución:", tiempo_correr)
 
-if __name__ != '__main__': # esta comentado porque demora mucho tiempo
+if __name__ == '__main__': # esta comentado porque demora mucho tiempo
     print("1.3")
     #acá se debería correr la función
     script_dir = os.path.dirname("Informe.ipynb") #<-- absolute dir the script is in
