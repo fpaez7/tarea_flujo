@@ -206,10 +206,17 @@ def resolver_pfmc(abastecimiento, encuentro, transporte, inventario) :
         json.dump(flowDict, outfile)
     return flowDict
 if __name__ != '__main__':
+    print("2.2")
+    tiempo_1 = time.time()
     grafico_pfmc()
+    print("Tiempo de ejecución:", tiempo_2 - tiempo_1)
 
 if __name__ == '__main__':
+    print("2.3")
+    tiempo_1 = time.time()
     resolver_pfmc("matriz_abastecimiento30x70.txt",
                     "matriz_encuentro50x70.txt",
                     "costos_transporte30x50.txt",
                     "costos_inventario30.txt")
+    tiempo_2 = time.time()
+    print("Tiempo de ejecución:", tiempo_2 - tiempo_1)
